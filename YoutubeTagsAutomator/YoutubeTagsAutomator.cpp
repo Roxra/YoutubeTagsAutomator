@@ -7,18 +7,13 @@
 int main()
 {
     std::cout << "Please enter the game name" << std::endl;
-    std::string GameName;
     std::getline(std::cin, GameName);
 
-    std::vector<std::string> TagExtensions{ "Review", "Gameplay", "Steam", "PC", "60fps", "60fps Review", "game", "Steam gameplay", "Steam 60fps," "PC gameplay", "Walkthrough", "first impressions", 
-        "60fps gameplay", "steam gameplay", "lets play", "steam lets play", "lets play 60fps"};
+    std::cout << "Please enter the platform name (Steam,PS5,Switch etc)" << std::endl;
+    std::getline(std::cin, PlatformName);
 
-    //todo add platform modifier
-    
-    std::string Outputs;
-
-    AttachTagExtensions(TagExtensions, GameName, Outputs);
-    CopyToClipboard(Outputs);
+    AttachTagExtensions();
+    CopyToClipboard();
 
     std::cout << "All done! They have been copied to your clipboard! Just paste them into YouTube!" << std::endl;
 
@@ -26,19 +21,40 @@ int main()
     return 0;
 }
 
-void AttachTagExtensions(std::vector<std::string>& TagExtensions, std::string& GameName, std::string& Outputs)
+void AttachTagExtensions()
 {
     std::cout << "Generating tags!" << std::endl;
+
+    //TODO: COUNT LENGTH TO CHECK IT DOESN'T GO ABOVE LIMIT
+    //TODO: if last entry don't do the ","
 
     for (std::string Extension : TagExtensions)
     {
         std::string output = GameName + " " + Extension + ",";
-        Outputs += output;
-        std::cout << output << std::endl;
+        AddToTagList(output);
     }
+
+    if (!PlatformName.empty())
+    {
+        std::string output = GameName + " " + PlatformName + ",";
+        AddToTagList(output); //adds just game and platform tag (eg "Steam")
+
+        for (std::string Extension : TagExtensions)
+        {
+            std::string output = GameName + " " + PlatformName + " " + Extension + ",";
+            AddToTagList(output);
+        }
+    }
+
 }
 
-void CopyToClipboard(std::string& Outputs)
+void AddToTagList(std::string& output)
+{
+    Outputs += output;
+    std::cout << output << std::endl;
+}
+
+void CopyToClipboard()
 {
     const size_t len = strlen(Outputs.c_str()) + 1;
     HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
