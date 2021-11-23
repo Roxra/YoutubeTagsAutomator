@@ -25,9 +25,6 @@ void AttachTagExtensions()
 {
     std::cout << "Generating tags!" << std::endl;
 
-    //TODO: COUNT LENGTH TO CHECK IT DOESN'T GO ABOVE LIMIT
-    //TODO: if last entry don't do the ","
-
     for (std::string Extension : TagExtensions)
     {
         std::string output = GameName + " " + Extension + ",";
@@ -41,7 +38,11 @@ void AttachTagExtensions()
 
         for (std::string Extension : TagExtensions)
         {
-            std::string output = GameName + " " + PlatformName + " " + Extension + ",";
+            std::string output = GameName + " " + PlatformName + " " + Extension;
+            if (Extension != TagExtensions.back())
+            {
+                output = output + ",";
+            }  
             AddToTagList(output);
         }
     }
@@ -50,8 +51,12 @@ void AttachTagExtensions()
 
 void AddToTagList(std::string& output)
 {
-    Outputs += output;
-    std::cout << output << std::endl;
+    TotalSize += output.length();
+    if (TotalSize <= 500)
+    {
+        Outputs += output;
+        std::cout << output << std::endl;
+    }
 }
 
 void CopyToClipboard()
